@@ -4,10 +4,12 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-var cell_size = 40;
-const size = Math.min(window.innerWidth, window.innerHeight) / Math.min(Math.floor(window.innerWidth / cell_size), Math.floor(window.innerHeight / cell_size)); // Adjusted size to maintain square cells
-const cols = Math.floor(canvas.width / size);
-const rows = Math.floor(canvas.height / size);
+// Adjust size to ensure all cells are roughly the same size
+var baseSize = 40;
+var size = Math.min(canvas.width, canvas.height);
+var cols = Math.floor(canvas.width / baseSize);
+var rows = Math.floor(canvas.height / baseSize);
+size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows)); // Adjust size to fit both dimensions
 
 // Initialize maze grid
 const grid = [];
@@ -28,7 +30,7 @@ function index(x, y) {
 // Get unvisited neighbours
 function getUnvisitedNeighbors(cell) {
     const neighbors = [];
-    const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // Top, right, bottom, left
+    const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
     directions.forEach(([dx, dy], i) => {
         const nx = cell.x + dx;
         const ny = cell.y + dy;
@@ -49,26 +51,24 @@ function removeWall(current, next, wallIndex) {
 // Draw the maze
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Draw top wall of the first row and left wall of the first column
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(canvas.width, 0); // Top wall
+    ctx.lineTo(canvas.width, 0);
     ctx.moveTo(0, 0);
-    ctx.lineTo(0, canvas.height); // Left wall
+    ctx.lineTo(0, canvas.height);
     ctx.stroke();
 
     grid.forEach(cell => {
         const x = cell.x * size;
         const y = cell.y * size;
         ctx.lineWidth = 5;
-        // Draw only the bottom and right walls to avoid overlapping lines
-        if (cell.walls[2]) { // Bottom wall
+        if (cell.walls[2]) { 
             ctx.beginPath();
             ctx.moveTo(x, y + size);
             ctx.lineTo(x + size, y + size);
             ctx.stroke();
         }
-        if (cell.walls[1]) { // Right wall
+        if (cell.walls[1]) {
             ctx.beginPath();
             ctx.moveTo(x + size, y);
             ctx.lineTo(x + size, y + size);
@@ -77,7 +77,7 @@ function draw() {
     });
 }
 
-// BACKTRACKING ALGORITHM with visualization
+// BACKTRACKING ALGORITHM
 async function backtrack() {
     const stack = [];
     const startCell = grid[0];
