@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recursive Division Algorithm | A project by Shreyas Deo</title>
     <link rel="stylesheet" href="algo-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="flex">
@@ -19,15 +20,23 @@
                     <label for="width">Line Width:</label>
                     <input type="number" id="lineWidth" min="1" max="10" value="2">
                     <br>
-                    <label for="speed">Speed:</label>
-                    <input type="number" id="speed" min="1" max="1000" value="50">
+                    <label for="genDelay">Delay:</label>
+                    <input type="number" id="genDelay" min="1" max="1000" value="300">
                     <br>
                     <label for="cellSize">Cell Size:</label>
-                    <input type="number" id="cellSize" min="8" max="100" value="40">
+                    <input type="number" id="cellSize" min="8" max="100" value="20">
                 </form>
             </div>
         </div>
     </div>
     <script src="recdiv-script.js"></script>
+    <script>
+        Swal.fire({
+            title: "Recursive Division Algorithm",
+            text: 'Each maze is divided into two sections connected by a path. Then each section is recursively divided into more sections until the maze is completed. The algorithm often creates mazes with long, unbroken walls.',
+            icon: 'info',
+            confirmButtonText: 'Cool'
+        })
+    </script>
 </body>
 </html>

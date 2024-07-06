@@ -5,13 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backtracking Algorithm | A project by Shreyas Deo</title>
     <link rel="stylesheet" href="algo-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="flex">
         <h1>Backtracking Algorithm</h1>
-        <canvas id="canvas"></canvas>
-        <button onclick="backtrack()">Generate</button>
+        <div class="flex" style="flex-direction: row;">
+            <div class="gen">
+                <canvas id="canvas"></canvas>
+                <button onclick="backtrack()">Generate</button>
+            </div>
+            <div class="controls">
+                <form>
+                    <label for="width">Line Width:</label>
+                    <input type="number" id="lineWidth" min="1" max="10" value="2">
+                    <br>
+                    <label for="genDelay">Delay:</label>
+                    <input type="number" id="genDelay" min="1" max="1000" value="1">
+                    <br>
+                    <label for="cellSize">Cell Size:</label>
+                    <input type="number" id="cellSize" min="8" max="100" value="40">
+                </form>
+            </div>
+        </div>
     </div>
     <script src="backtracking-script.js"></script>
+    <script>
+        Swal.fire({
+            title: 'Backtracking Algorithm',
+            text: 'The algorithm branches out in random directions until it lands in a corner, at which point it backtracks (retraces its steps) to find a new path. This process is repeated until the entire maze has been generated.',
+            icon: 'info',
+            confirmButtonText: 'Cool'
+        })
+    </script>
 </body>
 </html>

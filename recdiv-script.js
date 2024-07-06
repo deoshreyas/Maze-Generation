@@ -13,8 +13,10 @@ size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows
 
 const grid = [];
 
+var delay = 300;
+
 // RECURSIVE DIVISION
-function recdiv(startX = 0, startY = 0, endX = cols - 1, endY = rows - 1, delay = 300) {
+function recdiv(startX = 0, startY = 0, endX = cols - 1, endY = rows - 1) {
     setTimeout(() => {
         let width = endX - startX + 1;
         let height = endY - startY + 1;
@@ -85,23 +87,40 @@ function recursiveDivision() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
-            grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
+            grid.push({ x, y, visited: false, walls: [true, true, true, true] }); 
         }
     }
     recdiv();
 }
 
 document.querySelector('#lineWidth').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 10) {
+        this.value = 10;
+    }
     ctx.lineWidth = this.value;
 });
 
 document.querySelector('#cellSize').addEventListener('change', function() {
+    if (this.value < 8) {
+        this.value = 8;
+    } else if (this.value > 100) {
+        this.value = 100;
+    }
     baseSize = parseInt(this.value);
     cols = Math.floor(canvas.width / baseSize);
     rows = Math.floor(canvas.height / baseSize);
     size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows));
 });
 
-document.querySelector('#speed').addEventListener('change', function() {
-    recdiv(0, 0, cols - 1, rows - 1, parseInt(this.value));
+document.querySelector('#genDelay').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 1000) {
+        this.value = 1000;
+    }
+    delay = parseInt(this.value);
 });
+
+ctx.lineWidth = 2;

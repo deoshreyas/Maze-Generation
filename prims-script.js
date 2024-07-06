@@ -11,13 +11,9 @@ var cols = Math.floor(canvas.width / baseSize);
 var rows = Math.floor(canvas.height / baseSize);
 size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows)); // Adjust size to fit both dimensions
 
-// Initialize maze grid
 const grid = [];
-for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-        grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
-    }
-}
+
+var delay = 50;
 
 // Get grid index
 function index(x, y) {
@@ -42,12 +38,12 @@ function getNeighbors(cell) {
 }
 
 // Delay for visuals
-function delay(ms) {
+function delay_wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // PRIM'S ALGORITHM
-async function prims() {
+async function prims_algo() {
     let current = grid[0];
     current.visited = true;
     let walls = getNeighbors(current).map(n => ({ ...n, from: current }));
@@ -61,10 +57,21 @@ async function prims() {
             const newWalls = getNeighbors(cell).map(n => ({ ...n, from: cell }));
             walls = walls.concat(newWalls);
             draw(); // Draw the maze after each step
-            await delay(50); // Wait for 50ms before continuing to the next step
+            await delay_wait(delay); // Wait for 50ms before continuing to the next step
         }
         walls.splice(randomWallIndex, 1);
     }
+}
+
+function prims() {
+    grid.length = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
+        }
+    }
+    prims_algo();
 }
 
 // Remove wall between two cells
@@ -80,7 +87,6 @@ function draw() {
         const x = cell.x * size;
         const y = cell.y * size;
         ctx.beginPath();
-        ctx.lineWidth = 5;
         if (cell.walls[0]) ctx.moveTo(x, y), ctx.lineTo(x + size, y);
         if (cell.walls[1]) ctx.moveTo(x + size, y), ctx.lineTo(x + size, y + size); 
         if (cell.walls[2]) ctx.moveTo(x + size, y + size), ctx.lineTo(x, y + size); 
@@ -88,3 +94,35 @@ function draw() {
         ctx.stroke();
     });
 }
+
+document.querySelector('#lineWidth').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 10) {
+        this.value = 10;
+    }
+    ctx.lineWidth = this.value;
+});
+
+document.querySelector('#cellSize').addEventListener('change', function() {
+    if (this.value < 8) {
+        this.value = 8;
+    } else if (this.value > 100) {
+        this.value = 100;
+    }
+    baseSize = parseInt(this.value);
+    cols = Math.floor(canvas.width / baseSize);
+    rows = Math.floor(canvas.height / baseSize);
+    size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows));
+});
+
+document.querySelector('#genDelay').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 1000) {
+        this.value = 1000;
+    }
+    delay = parseInt(this.value);
+});
+
+ctx.lineWidth = 2;

@@ -13,11 +13,8 @@ size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows
 
 // Initialize maze grid
 const grid = [];
-for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-        grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
-    }
-}
+
+var delay = 50;
 
 // Get grid index
 function index(x, y) {
@@ -28,7 +25,7 @@ function index(x, y) {
 }
 
 // RANDOMISED KRUSKAL'S ALGORITH
-function kruskal() {
+function kruskal_algo() {
     let sets = grid.map((_, i) => new Set([i])); // Initialize sets
     let walls = [];
 
@@ -50,11 +47,22 @@ function kruskal() {
                 unionSets(sets, a, b);
                 visualizeStep();
             }
-            setTimeout(() => processWalls(i + 1), 50); 
+            setTimeout(() => processWalls(i + 1), delay); 
         }
     }
 
     processWalls(0);
+}
+
+function kruskal() {
+    grid.length = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
+        }
+    }
+    kruskal_algo();
 }
 
 // Find the set that contains the cell
@@ -97,7 +105,6 @@ function drawCell(cell) {
     const x = cell.x * size;
     const y = cell.y * size;
     ctx.beginPath();
-    ctx.lineWidth = 5;
     if (cell.walls[0]) {
         ctx.moveTo(x, y);
         ctx.lineTo(x + size, y);
@@ -116,3 +123,35 @@ function drawCell(cell) {
     }
     ctx.stroke();
 }
+
+document.querySelector('#lineWidth').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 10) {
+        this.value = 10;
+    }
+    ctx.lineWidth = this.value;
+});
+
+document.querySelector('#cellSize').addEventListener('change', function() {
+    if (this.value < 8) {
+        this.value = 8;
+    } else if (this.value > 100) {
+        this.value = 100;
+    }
+    baseSize = parseInt(this.value);
+    cols = Math.floor(canvas.width / baseSize);
+    rows = Math.floor(canvas.height / baseSize);
+    size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows));
+});
+
+document.querySelector('#genDelay').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 1000) {
+        this.value = 1000;
+    }
+    delay = parseInt(this.value);
+});
+
+ctx.lineWidth = 2;

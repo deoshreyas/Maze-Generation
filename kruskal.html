@@ -5,13 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Randomised Kruskal's Algorithm | A project by Shreyas Deo</title>
     <link rel="stylesheet" href="algo-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="flex">
         <h1>Randomised Kruskal's Algorithm</h1>
-        <canvas id="canvas"></canvas>
-        <button onclick="kruskal()">Generate</button>
+        <div class="flex" style="flex-direction: row;">
+            <div class="gen">
+                <canvas id="canvas"></canvas>
+                <button onclick="kruskal()">Generate</button>
+            </div>
+            <div class="controls">
+                <form>
+                    <label for="width">Line Width:</label>
+                    <input type="number" id="lineWidth" min="1" max="10" value="2">
+                    <br>
+                    <label for="genDelay">Delay:</label>
+                    <input type="number" id="genDelay" min="1" max="1000" value="50">
+                    <br>
+                    <label for="cellSize">Cell Size:</label>
+                    <input type="number" id="cellSize" min="8" max="100" value="40">
+                </form>
+            </div>
+        </div>
     </div>
     <script src="kruskal-script.js"></script>
+    <script>
+        Swal.fire({
+            title: "Randomised Kruskal's Algorithm",
+            text: 'Each cell starts isolated, and walls are initially treated as unified sets. Random walls are removed only if they separate cells from different sets. If the cells are already connected, the wall remains or is discarded, merging the sets of the cells. The process repeats until a connected maze is formed.',
+            icon: 'info',
+            confirmButtonText: 'Cool'
+        })
+    </script>
 </body>
 </html>

@@ -11,13 +11,9 @@ var cols = Math.floor(canvas.width / baseSize);
 var rows = Math.floor(canvas.height / baseSize);
 size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows)); // Adjust size to fit both dimensions
 
-// Initialize maze grid
 const grid = [];
-for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-        grid.push({ x, y, visited: false, walls: [true, true, true, true] }); // Top, right, bottom, left
-    }
-}
+
+var delay = 1;
 
 // Get grid index
 function index(x, y) {
@@ -61,7 +57,6 @@ function draw() {
     grid.forEach(cell => {
         const x = cell.x * size;
         const y = cell.y * size;
-        ctx.lineWidth = 5;
         if (cell.walls[2]) { 
             ctx.beginPath();
             ctx.moveTo(x, y + size);
@@ -78,7 +73,10 @@ function draw() {
 }
 
 // BACKTRACKING ALGORITHM
-async function backtrack() {
+let animationFrameId = null;
+let timeoutId = null; 
+
+async function backtrack_algo() {
     const stack = [];
     const startCell = grid[0];
     startCell.visited = true;
@@ -86,7 +84,6 @@ async function backtrack() {
 
     function animate() {
         if (stack.length > 0) {
-            requestAnimationFrame(animate);
             const current = stack[stack.length - 1];
             const neighbors = getUnvisitedNeighbors(current);
 
@@ -98,9 +95,65 @@ async function backtrack() {
             } else {
                 stack.pop();
             }
-            draw(); 
+            draw();
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+                animationFrameId = requestAnimationFrame(animate);
+            }, delay); 
         }
     }
-
     animate();
 }
+
+function backtrack() {
+    if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId); // Cancel ongoing animation
+        animationFrameId = null;
+    }
+    if (timeoutId !== null) {
+        clearTimeout(timeoutId); // Clear timeout
+        timeoutId = null;
+    }
+    grid.length = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            grid.push({ x, y, visited: false, walls: [true, true, true, true] });
+        }
+    }
+    backtrack_algo();
+}
+
+document.querySelector('#lineWidth').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 10) {
+        this.value = 10;
+    }
+    ctx.lineWidth = this.value;
+});
+
+document.querySelector('#cellSize').addEventListener('change', function() {
+    if (this.value < 8) {
+        this.value = 8;
+    } else if (this.value > 100) {
+        this.value = 100;
+    }
+    baseSize = parseInt(this.value);
+    cols = Math.floor(canvas.width / baseSize);
+    rows = Math.floor(canvas.height / baseSize);
+    size = Math.min(Math.floor(canvas.width / cols), Math.floor(canvas.height / rows));
+});
+
+document.querySelector('#genDelay').addEventListener('change', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    } else if (this.value > 1000) {
+        this.value = 1000;
+    }
+    delay = parseInt(this.value);
+});
+
+ctx.lineWidth = 2;
