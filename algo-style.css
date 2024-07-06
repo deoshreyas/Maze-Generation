@@ -46,3 +46,23 @@ canvas {
     width: 400px;
     height: 400px;
 }
+
+.gen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    flex-direction: column;
+}
+
+.controls {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.controls form input {
+    background-color: var(--primary-col);
+    font-size: 1em;
+    border: 2px solid var(--secondary-col);
+    padding: 0 .5em;
+}

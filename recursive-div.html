@@ -9,8 +9,24 @@
 <body>
     <div class="flex">
         <h1>Recursive Division Algorithm</h1>
-        <canvas id="canvas"></canvas>
-        <button onclick="recdiv()">Generate</button>
+        <div class="flex" style="flex-direction: row;">
+            <div class="gen">
+                <canvas id="canvas"></canvas>
+                <button onclick="recursiveDivision()">Generate</button>
+            </div>
+            <div class="controls">
+                <form>
+                    <label for="width">Line Width:</label>
+                    <input type="number" id="lineWidth" min="1" max="10" value="2">
+                    <br>
+                    <label for="speed">Speed:</label>
+                    <input type="number" id="speed" min="1" max="1000" value="50">
+                    <br>
+                    <label for="cellSize">Cell Size:</label>
+                    <input type="number" id="cellSize" min="8" max="100" value="40">
+                </form>
+            </div>
+        </div>
     </div>
     <script src="recdiv-script.js"></script>
 </body>
